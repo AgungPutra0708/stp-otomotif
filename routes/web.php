@@ -10,9 +10,12 @@ use App\Http\Controllers\admin\ServiceController;
 use App\Http\Controllers\admin\TeamController;
 use App\Http\Controllers\admin\TestiController;
 use App\Http\Controllers\landing\HomeController;
+use App\Http\Controllers\landing\ProductLandingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/product', [ProductLandingController::class, 'index'])->name('product');
+Route::get('/product/{segment}', [ProductLandingController::class, 'show'])->name('product.details');
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');

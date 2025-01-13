@@ -82,29 +82,42 @@ class ProductController extends Controller
         try {
             $request->validate([
                 'product_name' => 'required|string|max:255',
-                // Validasi lainnya sesuai kebutuhan
+                'category' => 'required',
+                'status' => 'required',
+                'price' => 'required|numeric',
+                'product_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi gambar
             ]);
 
             // Membuat slug berdasarkan nama produk
             $slug = ProductModel::generateSlug($request->product_name);
 
             // Simpan data produk ke database
-            ProductModel::create([
+            $product = ProductModel::create([
                 'name' => $request->product_name,
                 'slug' => $slug,
                 'category_id' => Crypt::decrypt($request->category),
                 'status' => $request->status,
                 'price' => $request->price,
                 'specification' => $request->specification,
-                // Simpan data lainnya
             ]);
+
+            // Cek apakah ada gambar yang diupload
+            if ($request->hasFile('product_images')) {
+                foreach ($request->file('product_images') as $image) {
+                    $imageName = time() . '-' . $image->getClientOriginalName();
+                    $imagePath = $image->storeAs('uploads/products', $imageName, 'public');
+
+                    // Simpan data gambar ke database
+                    $product->images()->create([
+                        'image_path' => 'storage/' . $imagePath,
+                    ]);
+                }
+            }
 
             return redirect()->route('products.index')->with('success', 'Product created successfully');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Handle validation errors
-            return redirect()->back()->with('error', $e->errors());
+            return redirect()->back()->withErrors($e->errors());
         } catch (\Exception $e) {
-            // Handle any other exceptions (e.g., database-related)
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -138,7 +151,10 @@ class ProductController extends Controller
         try {
             $request->validate([
                 'product_name' => 'required|string|max:255',
-                // Validasi lainnya
+                'category' => 'required',
+                'status' => 'required',
+                'price' => 'required|numeric',
+                'product_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi gambar
             ]);
 
             $product = ProductModel::findOrFail($id);
@@ -146,23 +162,55 @@ class ProductController extends Controller
             // Membuat slug berdasarkan nama produk
             $slug = ProductModel::generateSlug($request->product_name);
 
-            // Update data produk
-            $product->update([
-                'name' => $request->product_name,
-                'slug' => $slug,
-                'category_id' => Crypt::decrypt($request->category),
-                'status' => $request->status,
-                'price' => $request->price,
-                'specification' => $request->specification,
-                // Update data lainnya
-            ]);
+            $existingProduct = ProductModel::where('slug', $slug)->where('id', '!=', $product->id)->first();
+            if (!$existingProduct) {
+                // Update data produk
+                $product->update([
+                    'name' => $request->product_name,
+                    'slug' => $slug,
+                    'category_id' => Crypt::decrypt($request->category),
+                    'status' => $request->status,
+                    'price' => $request->price,
+                    'specification' => $request->specification,
+                ]);
+            } else {
+                // Update data produk
+                $product->update([
+                    'name' => $request->product_name,
+                    'category_id' => Crypt::decrypt($request->category),
+                    'status' => $request->status,
+                    'price' => $request->price,
+                    'specification' => $request->specification,
+                ]);
+            }
+
+            // Cek apakah ada gambar baru yang diupload
+            if ($request->hasFile('product_images')) {
+                // Hapus gambar lama
+                foreach ($product->images as $image) {
+                    $imagePath = public_path($image->image_path);
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
+                    $image->delete();
+                }
+
+                // Upload dan simpan gambar baru
+                foreach ($request->file('product_images') as $image) {
+                    $imageName = time() . '-' . $image->getClientOriginalName();
+                    $imagePath = $image->storeAs('uploads/products', $imageName, 'public');
+
+                    // Simpan data gambar ke database
+                    $product->images()->create([
+                        'image_path' => 'storage/' . $imagePath,
+                    ]);
+                }
+            }
 
             return redirect()->route('products.index')->with('success', 'Product updated successfully');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Handle validation errors
-            return redirect()->back()->with('error', $e->errors());
+            return redirect()->back()->withErrors($e->errors());
         } catch (\Exception $e) {
-            // Handle any other exceptions (e.g., database-related)
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
