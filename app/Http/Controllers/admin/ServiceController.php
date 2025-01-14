@@ -10,6 +10,7 @@ use App\Models\CategoryServiceModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Str;
 
 class ServiceController extends Controller
 {
