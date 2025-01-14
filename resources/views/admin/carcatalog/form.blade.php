@@ -1,12 +1,12 @@
 @extends('admin.layout.app')
-@section('title', 'Car Catalog')
+@section('title', 'Kendaraan')
 @section('content-admin')
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        {{ isset($carcatalog) ? 'Edit Car Catalog' : 'Create Car Catalog' }}
+                        {{ isset($carcatalog) ? 'Edit Kendaraan' : 'Create Kendaraan' }}
                     </div>
                     <div class="card-body card-block">
                         <form
@@ -19,23 +19,38 @@
 
                             <div class="row form-group">
                                 <div class="col col-md-3">
-                                    <label for="name" class="form-control-label">Nama Car</label>
+                                    <label for="name" class="form-control-label">Nama Kendaraan</label>
                                 </div>
                                 <div class="col-12 col-md-9">
                                     <input type="text" id="name" name="name"
                                         value="{{ isset($carcatalog) ? $carcatalog->name : '' }}"
-                                        placeholder="Masukkan Nama mobil" class="form-control">
+                                        placeholder="Masukkan Nama Kendaraan" class="form-control">
                                 </div>
 
                                 <div class="col col-md-3">
-                                    <label for="iamge_path" class="form-control-label">Gambar</label>
+                                    <label for="image_path" class="form-control-label">Foto Kendaraan</label>
                                 </div>
                                 <div class="col-12 col-md-9">
                                     <input type="file" id="image_path" name="image_path"
-                                        value="{{ isset($carcatalog) ? $carcatalog->image_path : '' }}"
-                                        class="form-control">
+                                        class="form-control-file">
                                 </div>
                             </div>
+
+                            <!-- Menampilkan gambar yang sudah ada -->
+                            @if (isset($carcatalog) && $carcatalog->image_path)
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label for="image_path" class="form-control-label">Gambar Saat Ini</label>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <div class="mb-3">
+                                            <img src="{{ asset($carcatalog->image_path) }}" alt="Product Image"
+                                                width="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
 
                             
                             <div class="card-footer">

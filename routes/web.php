@@ -49,5 +49,6 @@ Route::middleware(['web', 'auth', AdminMiddleware::class])->group(function () {
     Route::resource('categorys', CategorysProductController::class);
     Route::resource('categoryservices', CategoryServicesController::class);
     Route::resource('carcatalog', CarCatalogController::class);
+    Route::get('/carcatalog/remove-image/{id}', [CarCatalogController::class, 'removeImage'])->name('carcatalog.removeImage');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

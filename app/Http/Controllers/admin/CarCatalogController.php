@@ -54,18 +54,30 @@ class CarCatalogController extends Controller
             // Validate the request
             $validated = $request->validate([
                 'name' => 'required|string',
-                'image_path' => 'required|string'
+                'image_path' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi gambar
             ]);
-
+          
             // Proceed if validation is successful
             $carcatalog = new CarCatalogueServiceModel();
             $carcatalog->name = $request->name;
+
+            if ($request->hasFile('image_path')){  
+                //foreach ($request->file('image_path') as $image){
+                    $imageName = time() . '-' . $request->file('image_path')->getClientOriginalName();
+                    $imagePath = $request->file('image_path')->storeAs('uploads/products', $imageName, 'public');
+
+                    // Simpan data gambar ke database
+                    $carcatalog->image_path = 'storage/' . $imagePath;
+                //}
+            }
+
+
             
 
 
             $carcatalog->save();
 
-            return redirect()->route('carcatalog.index')->with('success', 'Car Catalogue created successfully');
+            return redirect()->route('carcatalog.index')->with('success', 'Vehicle created successfully');
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation errors and return payload
             return redirect()->back()->withErrors($e->errors())->withInput();
@@ -88,6 +100,7 @@ class CarCatalogController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
+                'image_path' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi gambar
                 // Validasi lainnya
             ]);
 
@@ -98,8 +111,20 @@ class CarCatalogController extends Controller
                 'name' => $request->name
                 // Update data lainnya
             ]);
+            if ($request->hasFile('image_path')){  
+                //foreach ($request->file('image_path') as $image){
+                    $imageName = time() . '-' . $request->file('image_path')->getClientOriginalName();
+                    $imagePath = $request->file('image_path')->storeAs('uploads/products', $imageName, 'public');
 
-            return redirect()->route('carcatalog.index')->with('success', 'Car Catalog updated successfully');
+                    // Simpan data gambar ke database
+                    $carcatalog->image_path = 'storage/' . $imagePath;
+                //}
+            }
+
+            $carcatalog->save();
+        
+
+            return redirect()->route('carcatalog.index')->with('success', 'Vehicle updated successfully');
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation errors
             return redirect()->back()->with('error', $e->errors());
@@ -117,7 +142,7 @@ class CarCatalogController extends Controller
             $carcatalog = CarCatalogueServiceModel::findOrFail($id);
             $carcatalog->delete();
 
-            return redirect()->route('carcatalog.index')->with('success', 'Car Catalog deleted successfully');
+            return redirect()->route('carcatalog.index')->with('success', 'Vehicle deleted successfully');
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation errors and return payload
             return redirect()->back()->withErrors($e->errors())->withInput();
@@ -125,5 +150,9 @@ class CarCatalogController extends Controller
             // Handle any other exceptions (e.g., database-related)
             return redirect()->back()->with('error', 'An error occurred while saving the categorys: ' . $e->getMessage())->withInput();
         }
+    }
+    public function removeImage($id)
+    {
+        
     }
 }

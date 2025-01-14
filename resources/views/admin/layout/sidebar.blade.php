@@ -29,7 +29,7 @@
                 </li>
                 <li class="{{ Route::is('carcatalog.*') ? 'active' : '' }}">
                     <a href="{{ route('carcatalog.index') }}">
-                        <i class="fa fa-car"></i>Car Catalog</a>
+                        <i class="fa fa-car"></i>Vehicle</a>
                 </li>
                 <li>
                     <a href="{{ route('dashboard') }}">

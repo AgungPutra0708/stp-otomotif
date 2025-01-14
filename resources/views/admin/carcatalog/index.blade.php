@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Car Catalog')
+@section('title', 'Kendaraan')
 @section('content-admin')
     <div class="container-fluid">
         <div class="row">
@@ -19,7 +19,6 @@
                             <tr>
                                 <th>no</th>
                                 <th>name</th>
-                                <th>image</th>
                                 <th>action</th>
                             </tr>
                         </thead>
@@ -44,10 +43,6 @@
                     {
                         data: 'name',
                         name: 'name'
-                    },
-                    {
-                        data: 'image_path',
-                        name: 'image_path'
                     },
                     {
                         data: 'action',
