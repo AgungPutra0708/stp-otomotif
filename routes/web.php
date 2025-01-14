@@ -18,9 +18,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/product', [ProductLandingController::class, 'index'])->name('product');
 Route::get('/product/{segment}', [ProductLandingController::class, 'show'])->name('product.details');
-Route::post('/product-order', [ProductLandingController::class, 'submitOrder'])->name('order.submit');
 
-Route::post('/cart', [CartController::class, 'store'])->middleware('auth');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+    Route::post('/cart/update/{cartId}', [CartController::class, 'updateCart'])->name('cart.update');
+    Route::delete('/cart/remove/{cartId}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/cart-order', [CartController::class, 'submitOrder'])->name('order.submit');
+});
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');

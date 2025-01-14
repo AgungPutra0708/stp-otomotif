@@ -16,7 +16,8 @@
                 <a href="service.html" class="nav-item nav-link">Service</a>
                 <a href="service.html" class="nav-item nav-link">Information Center</a>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
-                <a href="" class="nav-item nav-link bg-primary text-white px-5 ms-3 d-none d-lg-block">Cart</a>
+                <a href="{{ route('cart') }}"
+                    class="nav-item nav-link bg-primary text-white px-5 ms-3 d-none d-lg-block">Cart</a>
             </div>
         </div>
     </nav>

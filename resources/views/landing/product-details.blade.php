@@ -66,61 +66,13 @@
 
                     <!-- Button Group for Add to Cart and Order Now -->
                     <div class="ms-3">
-                        <button type="button" class="btn btn-primary btn-sm"
-                            onclick="addToCart({{ $productData->id }})">Add to Cart</button>
-                        <button type="button" class="btn btn-primary btn-sm mt-2 mt-sm-0" data-bs-toggle="modal"
-                            data-bs-target="#orderModal">Pesan Sekarang</button>
+                        <button type="button" class="btn btn-primary" onclick="addToCart({{ $productData->id }})"
+                            style="height: 38px;"><i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
                     </div>
                 </div>
             </div>
         </div>
         <!-- Blog End -->
-    </div>
-
-    <!-- Modal for Order Form -->
-    <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="orderModalLabel">Order Now</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('order.submit') }}" method="POST">
-                        @csrf
-                        <!-- Hidden Product Info -->
-                        <input type="hidden" name="product_name" value="{{ $productData->name }}">
-                        <input type="hidden" name="product_price" value="{{ $productData->price }}">
-                        <input type="hidden" name="product_id" value="{{ $productData->id }}">
-
-                        <!-- Customer Info -->
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Phone Number</label>
-                            <input type="text" class="form-control" id="phone" name="phone" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Address</label>
-                            <textarea class="form-control" id="address" name="address" rows="4"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="pesan" class="form-label">Message</label>
-                            <textarea class="form-control" id="pesan" name="pesan" rows="4"></textarea>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <button type="submit" class="btn btn-primary w-100">Send Order</button>
-                    </form>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -143,6 +95,7 @@
                     },
                     body: JSON.stringify({
                         product_id: productId,
+                        type: 'product',
                         quantity: qty
                     })
                 })

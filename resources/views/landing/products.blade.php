@@ -69,8 +69,9 @@
                                     data-id="{{ $item->id }}" style="width: 60px;">
                                 <button type="button" class="btn btn-outline-secondary btn-sm qty-btn"
                                     onclick="changeQty(this, 1)" style="height: 38px;">+</button>
-                                <button type="button" class="btn btn-primary btn-sm ms-2"
-                                    onclick="addToCart({{ $item->id }})">Add to Cart</button>
+                                <button type="button" class="btn btn-primary ms-2"
+                                    onclick="addToCart({{ $item->id }})" style="height: 38px;"><i
+                                        class="fa fa-shopping-cart" aria-hidden="true"></i></button>
                             </div>
                         </div>
 
@@ -111,6 +112,7 @@
                     },
                     body: JSON.stringify({
                         product_id: productId,
+                        type: 'product',
                         quantity: qty
                     })
                 })

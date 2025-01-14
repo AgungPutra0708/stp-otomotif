@@ -11,16 +11,38 @@
     <h1>Order Confirmation</h1>
     <p>Thank you for your order!</p>
 
-    <h3>Order Details:</h3>
+    <h3>Customer Information:</h3>
     <ul>
-        <li><strong>Product Name:</strong> {{ $product_name }}</li>
-        <li><strong>Product Price:</strong> Rp {{ number_format($product_price, 0, ',', '.') }}</li>
-        <li><strong>Name:</strong> {{ $name ?? '' }}</li>
-        <li><strong>Email:</strong> {{ $email ?? '' }}</li>
-        <li><strong>Phone:</strong> {{ $phone ?? '' }}</li>
-        <li><strong>Address:</strong> {{ $address ?? '' }}</li>
+        <li><strong>Name:</strong> {{ $name }}</li>
+        <li><strong>Email:</strong> {{ $email }}</li>
+        <li><strong>Phone:</strong> {{ $phone }}</li>
+        <li><strong>Address:</strong> {{ $address }}</li>
         <li><strong>Message:</strong> {{ $pesan ?? '' }}</li>
     </ul>
+
+    <h3>Order Details:</h3>
+
+    <!-- Cart Details in Table -->
+    <table border="1" cellpadding="10" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($carts as $item)
+                <tr>
+                    <td>{{ $item->product->name }}</td>
+                    <td>Rp {{ number_format($item->product->price, 0, ',', '.') }}</td>
+                    <td>{{ $item->quantity }}</td>
+                    <td>Rp {{ number_format($item->quantity * $item->product->price, 0, ',', '.') }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 
     <p>We will contact you shortly to confirm your order.</p>
 </body>
