@@ -15,12 +15,13 @@ class CartController extends Controller
     public function index()
     {
         $carts = Cart::where('user_id', Auth::id())->where('status', 'unsend')->get();
-        foreach ($carts as $cart) {
+
+        foreach ($carts as &$cart) {
             // Check if it's a product or a service and assign the respective data
             if ($cart->type === 'product') {
                 $cart->item = ProductModel::find($cart->product_id);
             } elseif ($cart->type === 'service') {
-                $cart->item = ServiceModel::find($cart->service_id);
+                $cart->item = ServiceModel::find($cart->product_id);
             }
         }
 
@@ -31,6 +32,10 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
+        }
+
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
@@ -51,8 +56,13 @@ class CartController extends Controller
 
         return response()->json(['message' => 'Product added to cart successfully!']);
     }
+
     public function updateCart(Request $request, $cartId)
     {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
+        }
+
         $cart = Cart::find($cartId);
 
         if ($cart) {
@@ -67,6 +77,10 @@ class CartController extends Controller
 
     public function removeFromCart($cartId)
     {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
+        }
+
         $cart = Cart::find($cartId);
 
         if ($cart) {
@@ -90,8 +104,16 @@ class CartController extends Controller
         ]);
 
         // Ambil data cart dari session atau database untuk dikirim ke email
-        $carts = Cart::where('user_id', Auth::id())->get();
+        $carts = Cart::where('user_id', Auth::id())->where('status', 'unsend')->get();
 
+        foreach ($carts as &$cart) {
+            // Check if it's a product or a service and assign the respective data
+            if ($cart->type === 'product') {
+                $cart->item = ProductModel::find($cart->product_id);
+            } elseif ($cart->type === 'service') {
+                $cart->item = ServiceModel::find($cart->product_id);
+            }
+        }
         // Data untuk email
         $data = [
             'carts'    => $carts,
@@ -110,7 +132,7 @@ class CartController extends Controller
         });
 
         // Update status cart menjadi 'sent' setelah email berhasil dikirim
-        Cart::where('user_id', Auth::id())->update(['status' => 'sent']);
+        Cart::where('user_id', Auth::id())->update(['status' => 'send']);
 
         // Redirect dengan pesan sukses
         return redirect()->back()->with('success', 'Order has been sent successfully!');

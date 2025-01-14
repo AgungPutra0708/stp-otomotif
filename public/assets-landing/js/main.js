@@ -1,59 +1,69 @@
 (function ($) {
     "use strict";
-    
+
     // Dropdown on mouse hover
     $(document).ready(function () {
         function toggleNavbarMethod() {
             if ($(window).width() > 992) {
-                $('.navbar .dropdown').on('mouseover', function () {
-                    $('.dropdown-toggle', this).trigger('click');
-                }).on('mouseout', function () {
-                    $('.dropdown-toggle', this).trigger('click').blur();
-                });
+                $(".navbar .dropdown")
+                    .on("mouseover", function () {
+                        $(".dropdown-toggle", this).trigger("click");
+                    })
+                    .on("mouseout", function () {
+                        $(".dropdown-toggle", this).trigger("click").blur();
+                    });
             } else {
-                $('.navbar .dropdown').off('mouseover').off('mouseout');
+                $(".navbar .dropdown").off("mouseover").off("mouseout");
             }
         }
         toggleNavbarMethod();
         $(window).resize(toggleNavbarMethod);
     });
 
-
     // Date and time picker
-    $('.date').datetimepicker({
-        format: 'L'
+    $(".date").datetimepicker({
+        format: "L",
     });
-    $('.time').datetimepicker({
-        format: 'LT'
+    $(".time").datetimepicker({
+        format: "LT",
     });
-    
-    
+
     // Back to top button
     $(window).scroll(function () {
         if ($(this).scrollTop() > 100) {
-            $('.back-to-top').fadeIn('slow');
+            $(".back-to-top").fadeIn("slow");
         } else {
-            $('.back-to-top').fadeOut('slow');
+            $(".back-to-top").fadeOut("slow");
         }
     });
-    $('.back-to-top').click(function () {
-        $('html, body').animate({scrollTop: 0}, 1500, 'easeInOutExpo');
+    $(".back-to-top").click(function () {
+        $("html, body").animate({ scrollTop: 0 }, 1500, "easeInOutExpo");
         return false;
     });
 
-
     // Portfolio isotope and filter
-    var portfolioIsotope = $('.portfolio-container').isotope({
-        itemSelector: '.portfolio-item',
-        layoutMode: 'fitRows'
+    var portfolioIsotope = $(".portfolio-container").isotope({
+        itemSelector: ".portfolio-item",
+        layoutMode: "fitRows",
     });
-    $('#portfolio-flters li').on('click', function () {
-        $("#portfolio-flters li").removeClass('active');
-        $(this).addClass('active');
+    $("#portfolio-flters li").on("click", function () {
+        $("#portfolio-flters li").removeClass("active");
+        $(this).addClass("active");
 
-        portfolioIsotope.isotope({filter: $(this).data('filter')});
+        portfolioIsotope.isotope({ filter: $(this).data("filter") });
     });
 
+    // Inisialisasi Isotope pada container dengan elemen layanan
+    var $grid = $(".row.g-5.service-container").isotope({
+        itemSelector: ".col-lg-4",
+        layoutMode: "fitRows",
+    });
+
+    // Filter berdasarkan kategori saat tombol diklik
+    $(".btn[data-filter]").on("click", function () {
+        var filterValue = $(this).attr("data-filter");
+        $grid.isotope({ filter: filterValue });
+    });
 
     // Testimonials carousel
     $(".testimonial-carousel").owlCarousel({
@@ -63,6 +73,4 @@
         dots: false,
         loop: true,
     });
-    
 })(jQuery);
-

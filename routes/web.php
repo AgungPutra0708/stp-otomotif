@@ -12,12 +12,15 @@ use App\Http\Controllers\admin\TestiController;
 use App\Http\Controllers\landing\CartController;
 use App\Http\Controllers\landing\HomeController;
 use App\Http\Controllers\landing\ProductLandingController;
+use App\Http\Controllers\landing\ServiceLandingController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/product', [ProductLandingController::class, 'index'])->name('product');
 Route::get('/product/{segment}', [ProductLandingController::class, 'show'])->name('product.details');
+Route::get('/service', [ServiceLandingController::class, 'index'])->name('service');
+Route::get('/service/{segment}', [ServiceLandingController::class, 'show'])->name('service.details');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart');

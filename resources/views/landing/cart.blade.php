@@ -29,8 +29,8 @@
                     <tbody>
                         @foreach ($carts as $item)
                             <tr data-id="{{ $item->id }}">
-                                <td>{{ $item->product->name }}</td>
-                                <td class="price">Rp {{ number_format($item->product->price, 0, ',', '.') }}</td>
+                                <td>{{ $item->item->name }}</td>
+                                <td class="price">Rp {{ number_format($item->item->price, 0, ',', '.') }}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <button type="button" class="btn btn-outline-secondary btn-sm qty-btn"

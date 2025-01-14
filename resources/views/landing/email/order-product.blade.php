@@ -35,10 +35,10 @@
         <tbody>
             @foreach ($carts as $item)
                 <tr>
-                    <td>{{ $item->product->name }}</td>
-                    <td>Rp {{ number_format($item->product->price, 0, ',', '.') }}</td>
+                    <td>{{ $item->item->name }}</td>
+                    <td>Rp {{ number_format($item->item->price, 0, ',', '.') }}</td>
                     <td>{{ $item->quantity }}</td>
-                    <td>Rp {{ number_format($item->quantity * $item->product->price, 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($item->quantity * $item->item->price, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
         </tbody>

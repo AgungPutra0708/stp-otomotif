@@ -12,12 +12,23 @@
                 <a href="{{ route('home') }}" class="nav-item nav-link {{ Route::is('home') ? 'active' : '' }}">Home</a>
                 <a href="about.html" class="nav-item nav-link">About</a>
                 <a href="{{ route('product') }}"
-                    class="nav-item nav-link {{ Route::is('product') ? 'active' : '' }}">Product</a>
-                <a href="service.html" class="nav-item nav-link">Service</a>
-                <a href="service.html" class="nav-item nav-link">Information Center</a>
+                    class="nav-item nav-link {{ Route::is('product.*') ? 'active' : '' }}">Product</a>
+                <a href="{{ route('service') }}"
+                    class="nav-item nav-link {{ Route::is('service.*') ? 'active' : '' }}">Service</a>
+                <a href="service.html" class="nav-item nav-link">Information</a>
                 <a href="contact.html" class="nav-item nav-link">Contact</a>
-                <a href="{{ route('cart') }}"
-                    class="nav-item nav-link bg-primary text-white px-5 ms-3 d-none d-lg-block">Cart</a>
+
+                @auth
+                    <!-- Tampilkan jika user sudah login -->
+                    <a href="{{ route('cart') }}"
+                        class="nav-item nav-link text-white bg-primary px-4 d-none d-lg-block">Cart</a>
+                @endauth
+
+                @guest
+                    <!-- Tampilkan jika user belum login -->
+                    <a href="{{ route('login') }}"
+                        class="nav-item nav-link text-white bg-primary px-4 d-none d-lg-block">Login</a>
+                @endguest
             </div>
         </div>
     </nav>
