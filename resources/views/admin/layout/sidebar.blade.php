@@ -15,9 +15,21 @@
                     <a href="{{ route('products.index') }}">
                         <i class="fa fa-list"></i>Products</a>
                 </li>
+                <li class="{{ Route::is('categorys.*') ? 'active' : '' }}">
+                    <a href="{{ route('categorys.index') }}">
+                        <i class="fas fa-server"></i>Category Product</a>
+                </li>
                 <li class="{{ Route::is('services.*') ? 'active' : '' }}">
                     <a href="{{ route('services.index') }}">
                         <i class="fa fa-wrench"></i>Services</a>
+                </li>
+                <li class="{{ Route::is('categoryservices.*') ? 'active' : '' }}">
+                    <a href="{{ route('categoryservices.index') }}">
+                        <i class="fa fa-pencil-alt"></i>Category Services</a>
+                </li>
+                <li class="{{ Route::is('carcatalog.*') ? 'active' : '' }}">
+                    <a href="{{ route('carcatalog.index') }}">
+                        <i class="fa fa-car"></i>Car Catalog</a>
                 </li>
                 <li>
                     <a href="{{ route('dashboard') }}">

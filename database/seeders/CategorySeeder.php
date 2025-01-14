@@ -13,14 +13,14 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $categories = [
+        $categorys = [
             'Kit Konversi',
             'Produk Custom',
             'Komponen Ev',
             'Produk Lain',
         ];
 
-        foreach ($categories as $category) {
+        foreach ($categorys as $category) {
             CategoryModel::create([
                 'name' => $category,
             ]);

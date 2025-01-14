@@ -10,6 +10,9 @@ use App\Http\Controllers\admin\ServiceController;
 use App\Http\Controllers\admin\TeamController;
 use App\Http\Controllers\admin\TestiController;
 use App\Http\Controllers\landing\HomeController;
+use App\Http\Controllers\admin\CategorysProductController;
+use App\Http\Controllers\admin\CategoryServicesController;
+use App\Http\Controllers\admin\CarCatalogController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -28,5 +31,8 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::resource('news', NewsController::class);
     Route::resource('testimoni', TestiController::class);
     Route::resource('message', MessageController::class);
+    Route::resource('categorys', CategorysProductController::class);
+    Route::resource('categoryservices', CategoryServicesController::class);
+    Route::resource('carcatalog', CarCatalogController::class);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
