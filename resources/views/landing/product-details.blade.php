@@ -55,11 +55,23 @@
                 </div>
                 <!-- Product Detail End -->
 
-                <!-- Order Now Button (Always at the bottom) -->
-                <button type="button" class="btn btn-primary mt-3 w-25 align-self-center" data-bs-toggle="modal"
-                    data-bs-target="#orderModal">
-                    Pesan Sekarang
-                </button>
+                <!-- Qty Input Field and Buttons (Add to Cart and Order Now) -->
+                <div class="d-flex align-items-center mt-3">
+                    <button type="button" class="btn btn-outline-secondary btn-sm qty-btn" onclick="changeQty(this, -1)"
+                        style="height: 38px;">-</button>
+                    <input type="number" class="form-control qty-input mx-2" value="1" min="1" id="qtyDetail"
+                        style="width: 60px;">
+                    <button type="button" class="btn btn-outline-secondary btn-sm qty-btn" onclick="changeQty(this, 1)"
+                        style="height: 38px;">+</button>
+
+                    <!-- Button Group for Add to Cart and Order Now -->
+                    <div class="ms-3">
+                        <button type="button" class="btn btn-primary btn-sm"
+                            onclick="addToCart({{ $productData->id }})">Add to Cart</button>
+                        <button type="button" class="btn btn-primary btn-sm mt-2 mt-sm-0" data-bs-toggle="modal"
+                            data-bs-target="#orderModal">Pesan Sekarang</button>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- Blog End -->
@@ -74,7 +86,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST">
+                    <form action="{{ route('order.submit') }}" method="POST">
                         @csrf
                         <!-- Hidden Product Info -->
                         <input type="hidden" name="product_name" value="{{ $productData->name }}">
@@ -99,8 +111,8 @@
                             <textarea class="form-control" id="address" name="address" rows="4"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="message" class="form-label">Message</label>
-                            <textarea class="form-control" id="message" name="message" rows="4"></textarea>
+                            <label for="pesan" class="form-label">Message</label>
+                            <textarea class="form-control" id="pesan" name="pesan" rows="4"></textarea>
                         </div>
 
                         <!-- Submit Button -->
@@ -110,4 +122,42 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function changeQty(element, delta) {
+            let input = element.parentElement.querySelector('.qty-input');
+            let currentQty = parseInt(input.value) || 1;
+            let newQty = currentQty + delta;
+            input.value = newQty > 0 ? newQty : 1;
+        }
+
+        function addToCart(productId) {
+            let qtyInput = document.querySelector(`.qty-input[data-id="${productId}"]`);
+            let qty = qtyInput ? qtyInput.value : 1;
+
+            fetch('/cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        quantity: qty
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Succees',
+                        text: data.message,
+                        confirmButtonText: 'OK'
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
 @endsection

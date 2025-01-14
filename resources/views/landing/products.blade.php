@@ -50,15 +50,29 @@
                         {{-- Ambil gambar pertama dari relasi images --}}
                         <img class="img-fluid w-100"
                             src="{{ asset($item->images->first()->image_path ?? 'assets-landing/img/default.jpg') }}"
-                            alt="{{ $item->name }}" style="max-height: 350px">
+                            alt="{{ $item->name }}" style="max-height: 350px; height: 350px;" />
 
-                        <a class="portfolio-title shadow-sm" href="{{ route('product.details', $item->slug) }}">
-                            <h4 class="text-uppercase mb-2">{{ $item->name }}</h4>
-                            <h6 class="text-uppercase mb-2">{{ $item->category->name }}</h6>
-                            <span class="text-body">
-                                Rp {{ number_format($item->price, 0, ',', '.') }}
-                            </span>
-                        </a>
+                        <div class="portfolio-title shadow-sm">
+                            <a href="{{ route('product.details', $item->slug) }}">
+                                <h4 class="text-uppercase mb-2">{{ $item->name }}</h4>
+                                <h6 class="text-uppercase mb-2">{{ $item->category->name }}</h6>
+                                <span class="text-body">
+                                    Rp {{ number_format($item->price, 0, ',', '.') }}
+                                </span>
+                            </a>
+
+                            <!-- Qty Input Field with Add to Cart Button -->
+                            <div class="d-flex align-items-center mt-3">
+                                <button type="button" class="btn btn-outline-secondary btn-sm qty-btn"
+                                    onclick="changeQty(this, -1)" style="height: 38px;">-</button>
+                                <input type="number" class="form-control qty-input mx-2" value="1" min="1"
+                                    data-id="{{ $item->id }}" style="width: 60px;">
+                                <button type="button" class="btn btn-outline-secondary btn-sm qty-btn"
+                                    onclick="changeQty(this, 1)" style="height: 38px;">+</button>
+                                <button type="button" class="btn btn-primary btn-sm ms-2"
+                                    onclick="addToCart({{ $item->id }})">Add to Cart</button>
+                            </div>
+                        </div>
 
                         <a class="portfolio-btn"
                             href="{{ asset($item->images->first()->image_path ?? 'assets-landing/img/default.jpg') }}"
@@ -77,4 +91,41 @@
         <!-- Pagination End -->
     </div>
     <!-- Portfolio End -->
+    <script>
+        function changeQty(element, delta) {
+            let input = element.parentElement.querySelector('.qty-input');
+            let currentQty = parseInt(input.value) || 1;
+            let newQty = currentQty + delta;
+            input.value = newQty > 0 ? newQty : 1;
+        }
+
+        function addToCart(productId) {
+            let qtyInput = document.querySelector(`.qty-input[data-id="${productId}"]`);
+            let qty = qtyInput ? qtyInput.value : 1;
+
+            fetch('/cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        quantity: qty
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Succees',
+                        text: data.message,
+                        confirmButtonText: 'OK'
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
 @endsection
