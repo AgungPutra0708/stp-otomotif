@@ -9,8 +9,8 @@ use App\Models\CarCatalogueServiceModel;
 use App\Models\CategoryServiceModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Str; 
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Str;
 
 class ServiceController extends Controller
 {

@@ -4,18 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ProductImageModel extends Model
+class Cart extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    protected $table = "product_images";
+    protected $table = "cart";
 
     protected $guarded = [];
 
     public function product()
     {
         return $this->belongsTo(ProductModel::class, 'product_id');
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(ServiceModel::class, 'service_id');
     }
 }

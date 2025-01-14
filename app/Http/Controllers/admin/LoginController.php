@@ -23,26 +23,65 @@ class LoginController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate input
+        // Validasi input
         $request->validate([
-            'username' => 'required|string',
+            'email' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        // Check if the user exists
-        $user = User::where('email', $request->username)->first();
+        // Cek apakah user ada di database
+        $user = User::where('email', $request->email)->first();
 
-        // If the user exists and the password matches
+        // Jika user ada dan password cocok
         if ($user && Hash::check($request->password, $user->password)) {
-            // Log the user in
+            // Login user
             Auth::login($user);
 
-            // Redirect to the dashboard
-            return redirect()->route('dashboard');
+            // Redirect berdasarkan status
+            if ($user->status === 'admin') {
+                return redirect()->route('dashboard')->with('success', 'Welcome, Admin!');
+            } else {
+                return redirect()->route('home')->with('success', 'Welcome, User!');
+            }
         }
 
-        // If authentication fails
-        return redirect()->back()->with('error', 'Invalid credentials');
+        // Jika login gagal
+        return redirect()->back()->with('error', 'Login failed!');
+    }
+
+    /**
+     * Show the register form.
+     */
+    public function show()
+    {
+        return view('admin.register');
+    }
+
+    /**
+     * Handle the register request.
+     */
+    public function register(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string',
+        ]);
+
+        // Simpan data user ke database dengan status 'user'
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'status' => 'user', // Set status sebagai 'user'
+        ]);
+
+        // Login otomatis setelah registrasi
+        Auth::login($user);
+
+        // Redirect ke home (karena status default adalah 'user')
+        return redirect()->route('home')->with('success', 'Registration successful!');
     }
 
     public function logout()

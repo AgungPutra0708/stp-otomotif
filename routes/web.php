@@ -9,19 +9,34 @@ use App\Http\Controllers\admin\SalesController;
 use App\Http\Controllers\admin\ServiceController;
 use App\Http\Controllers\admin\TeamController;
 use App\Http\Controllers\admin\TestiController;
+use App\Http\Controllers\landing\CartController;
 use App\Http\Controllers\landing\HomeController;
 use App\Http\Controllers\admin\CategorysProductController;
 use App\Http\Controllers\admin\CategoryServicesController;
 use App\Http\Controllers\admin\CarCatalogController;
+use App\Http\Controllers\landing\ProductLandingController;
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/product', [ProductLandingController::class, 'index'])->name('product');
+Route::get('/product/{segment}', [ProductLandingController::class, 'show'])->name('product.details');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+    Route::post('/cart/update/{cartId}', [CartController::class, 'updateCart'])->name('cart.update');
+    Route::delete('/cart/remove/{cartId}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/cart-order', [CartController::class, 'submitOrder'])->name('order.submit');
+});
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'store'])->name('login.store');
+Route::get('/register', [LoginController::class, 'show'])->name('register');
+Route::post('/register', [LoginController::class, 'register'])->name('register.store');
 
 // Protect dashboard, product, and service routes with 'auth' middleware
-Route::middleware(['web', 'auth'])->group(function () {
+Route::middleware(['web', 'auth', AdminMiddleware::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('products', ProductController::class);
     Route::get('/products/remove-image/{id}', [ProductController::class, 'removeImage'])->name('products.removeImage');

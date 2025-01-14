@@ -1,5 +1,5 @@
 @extends('admin.layout.auth')
-@section('title', 'Login')
+@section('title', 'Register')
 @section('content-auth')
     <div class="page-wrapper">
         <div class="page-content--bge5">
@@ -12,8 +12,12 @@
                             </a>
                         </div>
                         <div class="login-form">
-                            <form action="{{ route('login.store') }}" method="post">
+                            <form action="{{ route('register.store') }}" method="post">
                                 @csrf
+                                <div class="form-group">
+                                    <label>Name</label>
+                                    <input class="au-input au-input--full" type="text" name="name" placeholder="Name">
+                                </div>
                                 <div class="form-group">
                                     <label>Email</label>
                                     <input class="au-input au-input--full" type="email" name="email"
@@ -24,11 +28,11 @@
                                     <input class="au-input au-input--full" type="password" name="password"
                                         placeholder="Password">
                                 </div>
-                                <button class="au-btn au-btn--block au-btn--blue m-b-20" type="submit">Sign In</button>
+                                <button class="au-btn au-btn--block au-btn--blue m-b-20" type="submit">Sign Up</button>
                                 <div class="register-link">
                                     <p>
-                                        Don't you have account?
-                                        <a href="{{ route('register') }}">Sign Up Here</a>
+                                        Already have account?
+                                        <a href="{{ route('login') }}">Sign In</a>
                                     </p>
                                 </div>
                             </form>
