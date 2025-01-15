@@ -14,12 +14,18 @@ use App\Http\Controllers\landing\HomeController;
 use App\Http\Controllers\admin\CategorysProductController;
 use App\Http\Controllers\admin\CategoryServicesController;
 use App\Http\Controllers\admin\CarCatalogController;
+use App\Http\Controllers\landing\AboutController;
+use App\Http\Controllers\landing\ContactController;
+use App\Http\Controllers\landing\InformationController;
 use App\Http\Controllers\landing\ProductLandingController;
 use App\Http\Controllers\landing\ServiceLandingController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/about', [AboutController::class, 'index'])->name('about');
+Route::get('/information', [InformationController::class, 'index'])->name('info');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::get('/product', [ProductLandingController::class, 'index'])->name('product');
 Route::get('/product/{segment}', [ProductLandingController::class, 'show'])->name('product.details');
 Route::get('/service', [ServiceLandingController::class, 'index'])->name('service');
@@ -31,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cart/update/{cartId}', [CartController::class, 'updateCart'])->name('cart.update');
     Route::delete('/cart/remove/{cartId}', [CartController::class, 'removeFromCart'])->name('cart.remove');
     Route::post('/cart-order', [CartController::class, 'submitOrder'])->name('order.submit');
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
@@ -53,5 +60,4 @@ Route::middleware(['web', 'auth', AdminMiddleware::class])->group(function () {
     Route::resource('categoryservices', CategoryServicesController::class);
     Route::resource('carcatalog', CarCatalogController::class);
     Route::get('/carcatalog/remove-image/{id}', [CarCatalogController::class, 'removeImage'])->name('carcatalog.removeImage');
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

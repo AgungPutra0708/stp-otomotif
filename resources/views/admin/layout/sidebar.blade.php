@@ -31,24 +31,24 @@
                     <a href="{{ route('carcatalog.index') }}">
                         <i class="fa fa-car"></i>Vehicle</a>
                 </li>
-                <li>
-                    <a href="{{ route('dashboard') }}">
+                <li class="{{ Route::is('sales.*') ? 'active' : '' }}">
+                    <a href="{{ route('sales.index') }}">
                         <i class="fa fa-usd"></i>Sales</a>
                 </li>
-                <li>
-                    <a href="{{ route('dashboard') }}">
+                <li class="{{ Route::is('team.*') ? 'active' : '' }}">
+                    <a href="{{ route('team.index') }}">
                         <i class="fa fa-users"></i>Team</a>
                 </li>
-                <li>
-                    <a href="{{ route('dashboard') }}">
+                <li class="{{ Route::is('news.*') ? 'active' : '' }}">
+                    <a href="{{ route('news.index') }}">
                         <i class="fa fa-newspaper"></i>News</a>
                 </li>
-                <li>
-                    <a href="{{ route('dashboard') }}">
+                <li class="{{ Route::is('testimoni.*') ? 'active' : '' }}">
+                    <a href="{{ route('testimoni.index') }}">
                         <i class="fa fa-comments"></i>Testimony</a>
                 </li>
-                <li>
-                    <a href="{{ route('dashboard') }}">
+                <li class="{{ Route::is('message.*') ? 'active' : '' }}">
+                    <a href="{{ route('message.index') }}">
                         <i class="fa fa-comment"></i>Message</a>
                 </li>
             </ul>

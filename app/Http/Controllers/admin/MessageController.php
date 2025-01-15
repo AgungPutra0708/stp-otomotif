@@ -12,7 +12,7 @@ class MessageController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.message.index');
     }
 
     /**
@@ -20,7 +20,7 @@ class MessageController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.message.form');
     }
 
     /**

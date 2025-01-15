@@ -4,6 +4,8 @@ namespace App\Http\Controllers\landing;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\ProductModel;
 use App\Models\ServiceModel;
 use Illuminate\Http\Request;
@@ -106,13 +108,42 @@ class CartController extends Controller
         // Ambil data cart dari session atau database untuk dikirim ke email
         $carts = Cart::where('user_id', Auth::id())->where('status', 'unsend')->get();
 
+        if ($carts->isEmpty()) {
+            return redirect()->back()->with('error', 'Your cart is empty.');
+        }
+
+        // Simpan data order ke tabel orders
+        $order = Order::create([
+            'user_id' => Auth::id(),
+            'name'    => $request->input('name'),
+            'email'   => $request->input('email'),
+            'phone'   => $request->input('phone'),
+            'address' => $request->input('address'),
+            'message' => $request->input('message'),
+        ]);
+
+        // Simpan data cart ke tabel order_details
         foreach ($carts as &$cart) {
-            // Check if it's a product or a service and assign the respective data
+            $price = 0;
+
             if ($cart->type === 'product') {
                 $cart->item = ProductModel::find($cart->product_id);
             } elseif ($cart->type === 'service') {
                 $cart->item = ServiceModel::find($cart->product_id);
             }
+
+            if ($cart->item) {
+                $price = $cart->item->price;
+            }
+
+            OrderDetail::create([
+                'order_id'   => $order->id,
+                'product_id' => $cart->type === 'product' ? $cart->product_id : null,
+                'service_id' => $cart->type === 'service' ? $cart->product_id : null,
+                'type'       => $cart->type,
+                'quantity'   => $cart->quantity,
+                'price'      => $price,
+            ]);
         }
         // Data untuk email
         $data = [
