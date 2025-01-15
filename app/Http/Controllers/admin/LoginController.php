@@ -86,7 +86,13 @@ class LoginController extends Controller
 
     public function logout()
     {
+        $status = Auth::user()->status; // Membaca status pengguna sebelum logout
         Auth::logout();
-        return redirect()->route('login');
+
+        if ($status === 'admin') {
+            return redirect()->route('login'); // Admin diarahkan ke halaman login
+        } else {
+            return redirect()->route('home');  // User biasa diarahkan ke halaman home
+        }
     }
 }

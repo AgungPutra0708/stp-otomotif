@@ -126,7 +126,14 @@
                     });
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to add product to cart, Please Login First',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = '{{ route('login') }}';
+                    });
                 });
         }
     </script>

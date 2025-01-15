@@ -20,6 +20,7 @@ use App\Http\Controllers\landing\InformationController;
 use App\Http\Controllers\landing\ProductLandingController;
 use App\Http\Controllers\landing\ServiceLandingController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\ClearCacheMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -31,7 +32,7 @@ Route::get('/product/{segment}', [ProductLandingController::class, 'show'])->nam
 Route::get('/service', [ServiceLandingController::class, 'index'])->name('service');
 Route::get('/service/{segment}', [ServiceLandingController::class, 'show'])->name('service.details');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', ClearCacheMiddleware::class])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
     Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
     Route::post('/cart/update/{cartId}', [CartController::class, 'updateCart'])->name('cart.update');
@@ -46,7 +47,7 @@ Route::get('/register', [LoginController::class, 'show'])->name('register');
 Route::post('/register', [LoginController::class, 'register'])->name('register.store');
 
 // Protect dashboard, product, and service routes with 'auth' middleware
-Route::middleware(['web', 'auth', AdminMiddleware::class])->group(function () {
+Route::middleware(['web', 'auth', AdminMiddleware::class, ClearCacheMiddleware::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('products', ProductController::class);
     Route::get('/products/remove-image/{id}', [ProductController::class, 'removeImage'])->name('products.removeImage');
